@@ -27,7 +27,7 @@ File.write("header.h",
   }.compact.uniq.map { |line|
     (line =~ /;\s*\Z/) ? line : line + ";"
   }.join("\n") +
-  "\n"
+  "\n\n"
 )
 
 
