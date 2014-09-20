@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+# Automatically creates a header file with function declarations
+# for all c files found within the current directory and all
+# subdirectories. If the header.h file already exists, all function
+# declarations will be removed from it first. Includes will be preserved.
+# Something like this already existed
+# http://www.hwaci.com/sw/mkhdr/
+# but it's a bit old-fashioned.
+
+# Recursively walk current directory,
+# reading all c files,
+# and collecting the function declarations,
+# and pasting them into header.h
+
+File.write("header.h",
+  File.read("header.h").lines.select { |line| line =~ /\A#/ }.join +
+  "\n" +
+  Dir["**/*.c"].map { |file_name|
+    File.read(file_name).lines
+  }.flatten.map { |line|
+    if line =~ /\A[ \t]*(?<function_signature>[0-9a-zA-Z]+ [0-9a-zA-Z]+\(.*\))/
+      $~[:function_signature]
+    else
+      nil
+    end
+  }.compact.uniq.map { |line|
+    (line =~ /;\s*\Z/) ? line : line + ";"
+  }.join("\n") +
+  "\n"
+)
+
+
