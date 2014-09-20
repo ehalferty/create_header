@@ -20,7 +20,12 @@ File.write("header.h",
     File.read(file_name).lines
   }.flatten.map { |line|
     if line =~ /\A[ \t]*(?<function_signature>[0-9a-zA-Z]+ [0-9a-zA-Z]+\(.*\))/
-      $~[:function_signature]
+      function_signature = $~[:function_signature]
+      if function_signature !~ /\A(else|if)/
+        function_signature
+      else
+        nil
+      end
     else
       nil
     end
