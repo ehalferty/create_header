@@ -36,3 +36,4 @@ File.write("header.h",
   }.join("\n") +
   "\n\n"
 )
+
